@@ -1,0 +1,276 @@
+{% extends "baseCab.html" %}
+{% load staticfiles %}
+{% load bootstrap %}
+{% load mathematiks %}
+{% block title %}
+    <title>Stock Trade</title>
+{% endblock title %}
+{% block external %}
+    <link rel="stylesheet" href="{% static "css/tstyle.css" %}">
+    <link rel="stylesheet" href="{% static "css/bootstrap-table.min.css" %}">
+    <script type="text/javascript" src="{% static "js/bootstrap-table.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/bootstrap-table-contextmenu.min.js" %}"></script>
+    <script src="{% static "js/stock/highstock.js" %}"></script>
+	<script src="{% static "js/stock/highcharts-more.js" %}"></script>
+	<script src="{% static "js/stock/modules/exporting.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/rmenu.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/chart.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/scripts.js" %}"></script>
+    <script>
+
+    // o'clock
+    function time()
+    {
+        var _time = document.getElementById('timeClock').innerHTML.split(":");
+        var hour = Number(_time[0]);
+        var minute = Number(_time[1]);
+        var seconds = Number(_time[2]);
+
+        if(seconds >= 59)
+        {
+            seconds = seconds - 59;
+            if(minute >= 59)
+            {
+                minute = minute - 59;
+                if(hour >= 23)
+                {
+                    hour = hour - 23;
+                }
+                else hour++;
+            }
+            else minute++;
+        }
+        else seconds++;
+
+        var zeroHour = ''; var zeroMin = ''; var zeroSecond = '';
+        if (hour < 10) {
+            zeroHour = 0;
+            //if (hour != 0) hour = hour.replace('0', '');
+        }
+        if (minute < 10) {
+            zeroMin = '0';
+            //if (minute != '0') minute = minute.replace('0', '');
+        }
+        if(seconds < 10) {
+            zeroSecond = '0';
+            //if (seconds != 0) seconds = seconds.replace('0', '');
+        }
+
+        document.getElementById('timeClock').innerHTML = zeroHour + hour + ":" + zeroMin + minute + ":" + zeroSecond + seconds;
+    }
+    window.onload = function() {setInterval(time, 1000);};
+    // end o'clock
+
+    // buy shares
+
+    </script>
+{% endblock external %}
+{% block content %}
+<!-- 
+<nav role="navigation" class="navbar navbar-default">
+  <div class="navbar-header">
+    <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="javascript:void(0)" style="padding: 0px" class="navbar-brand">
+        <img src="{% static "img/logo-n.png" %}">
+    </a>
+    <p class="hidden-xs">Trade Stock Like A Pro</p>
+  </div>
+
+  <div id="navbarCollapse" class="collapse navbar-collapse">
+    <ul class="nav navbar-nav navbar-right">
+        <li class="action"><a href="{% url 'cab:index' %}">Trading platform</a></li>
+        <li><a href="{% url 'cab:history' %}">History</a></li>
+        <li><a href="{% url 'cab:FAQ' %}">FAQ</a></li>
+        <li><a id="logout" href="{% url 'Users:logout' %}">Logout</a></li>
+        <li><a style="color: #08ce08;" href="{% url 'cab:resetPassword' %}">Balance: {{ request.user.balance }} $</a></li>
+        <li><a style="color: #F9DA1A;" href="javascript:void(0)">London: <span id="timeClock">{% now 'H:i:s' %}</span> AM</a></li>
+    </ul>
+  </div>
+</nav>
+ -->
+
+
+
+
+<!-- ================ -->
+
+<div class="row" style="margin-top:10px">
+        <div class="col-md-12">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Active trades information</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="HistoryTable" data-classes="table table-hover" data-search="true" data-pagination="true" data-page-size=10>
+                        <thead class="companytable">
+                            <tr>
+                                <th>#</th>
+                                <th>Open Date</th>
+                                <th>Share name</th>
+                                <th>Take Profit</th>
+                                <th>Stop Loss</th>
+                                <th>Price</th>
+                                <th>Type</th>
+                                <th>Profit / Loss ($)</th>
+                                <th>Shares Amount</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                                {% if order.amount != 0 %}
+                                <tr>
+                                    <td>{{ order.id }}</td>
+                                    <td>{{ order.created_at|date:'Y-m-d H:i:s' }}</td>
+                                    <td>{{ order.company.name }}</td>
+                                    <td>{{ order.take_profit }}</td>
+                                    <td>{{ order.stop_loss }}</td>
+                                    <td>{{ order.price }}</td>
+                                    <td>{{ order.order_type|lower }}</td>
+                                    <td>{{ order|profit }}</td>
+                                    <td>{{ order.amount }}</td>
+                                    <td>{{ order|totalamount }}</td>
+                                    <td class="text-center">
+                                        {% if user == order.user %}
+                                            <button data-company='{{order.company.name}}' data-id={{order.id}} type="button" class="btn btn-raised btn-success sellButton">Sell</button>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<div id="sellShares" class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h4 class="modal-title">Sell </h4>
+          </div>
+
+          <div class="modal-body">
+            <form class="form-horizontal" id="sell_form" action="{% url 'cab:sellShares' %}" method="POST" role="form">{% csrf_token %}
+                <input type="hidden" name="buyUrl" id="id_buyUrl" value="{% url 'cab:buyShares' %}" />
+                <input type="hidden" name="sellUrl" id="id_sellUrl" value="{% url 'cab:sellShares' %}" />
+                <legend id="CNSBSBSell">How many shares of the company  you want to sell?</legend>
+                <span id="error" style="color:red"></span>
+                <div class="form-group">
+                    <label class="control-label  " for="id_sharesAmount">Shares amount</label>
+                    <div class=" ">
+                        <input class="form-control" id="sharesAmount" min="1" name="sharesAmount" required="" step="1" type="number" value="0">
+                    </div>
+                </div>
+
+                <input type="hidden" name="company" id="id_companyPk_sell" value="" />
+                <div class="form-group">
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-raised btn-success">Submit</button>
+
+                    </div>
+                </div>
+                <div id="shares_sold_msg">
+                  
+                </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+<!-- ================ -->
+
+
+<script>
+function sellShare(pk, companyname)
+{
+    $('#id_companyPk_sell').val(pk);
+    $('#CNSBSBSell').html('How many shares of "'+companyname+'" you want to sell?');
+    // $('#CNSBSBSell').html('How many shares of the company "'+companyname+'" you want to sell?');
+    // $('#sellShares form').attr('action', $('#id_sellUrl').val());
+    $('#sellShares').modal('show');
+}
+$(document).ready(function () {
+$('button').click(function(){
+  $('#error').hide()
+})
+  $('.sellButton').click(function () {
+    var id = $(this).data('id');
+    var company = $(this).data('company');
+    console.log(id);
+    $('#id_companyPk_sell').val(id);
+    $('#CNSBSBSell').html('How many shares of the company "'+company+'" you want to sell?');
+    // $('#sellShares form').attr('action', $('#id_sellUrl').val());
+    $('#sellShares').modal('show');
+  });
+  $("#error").hide();
+    var buy_order = $("#buy_form_it");
+    var sell_order = $("#sell_form");
+     buy_order.submit(function (event) {
+
+         $.ajax({
+           type: "POST",
+           url: "{% url 'cab:buyShares' %}",
+           data: buy_order.serialize(),
+           success: function (data) {
+             if (data['error'] == undefined) {
+               $('#buyShares').modal('toggle');
+               $("#error").hide();
+window.location.href = "{% url 'cab:index' %}";
+
+             } else {
+             $("#error").show();
+             $("#error").html(data['error']);
+	
+           }
+
+           }
+
+         });
+         
+event.preventDefault();
+	         return false;
+     });
+     sell_order.submit(function (event) {
+
+         $.ajax({
+           type: "POST",
+           url: "{% url 'cab:sellShares' %}",
+           data: sell_order.serialize(),
+           success: function (data) {
+             if (data['error'] == undefined) {
+              $('#shares_sold_msg').html('<div style="text-align: center;"><h4 style="color:#4caf50;  margin:7px;padding:center">Shares sold successfully</h4></div>')
+                  $('#sellShares').modal('toggle');
+               $("#error").hide();
+
+// window.location.href = "{% url 'cab:index' %}";
+
+             } else {
+             $("#error").show();
+             $("#error").html(data['error']);
+		
+              }
+           }
+
+         });
+         event.preventDefault();
+         	return false;
+
+     });
+ });
+
+</script>
+ 
+<!-- {% endblock content %} -->
