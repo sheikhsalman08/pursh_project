@@ -297,7 +297,7 @@ def buyAndSaleProcess(company_id):
             company.user.save()
             data.save()
 
-@user_passes_test(lambda u: u.rightUser == USER_BROKER, login_url='Users:login')
+# @user_passes_test(lambda u: u.rightUser == USER_BROKER, login_url='Users:login')
 def buyShares(request):
     if request.method == "POST":
         try:
@@ -405,7 +405,7 @@ def buyShares(request):
         return HttpResponse(status=405)
 
 
-@user_passes_test(lambda u: u.rightUser == USER_BROKER, login_url='Users:login')
+# @user_passes_test(lambda u: u.rightUser == USER_BROKER, login_url='Users:login')
 def sellShare(request):
     if request.method == "POST":
         try:
@@ -500,7 +500,7 @@ def sellShare(request):
     else:
         return HttpResponse(status=405)
 
-@user_passes_test(lambda u: u.rightUser == USER_BROKER, login_url='Users:login')
+# @user_passes_test(lambda u: u.rightUser == USER_BROKER, login_url='Users:login')
 def sellShares(request):
     if request.method == "POST":
         try:
