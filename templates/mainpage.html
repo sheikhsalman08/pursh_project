@@ -393,7 +393,8 @@
                 <input type="hidden" name="buyUrl" id="id_buyUrl" value="{% url 'cab:buyShares' %}" />
                 <input type="hidden" name="sellUrl" id="id_sellUrl" value="{% url 'cab:sellShares' %}" />
                 <legend id="CNSBSBSell">How many shares of the company do you want to sell?</legend>
-                <span id="error" style="color:red"></span>
+                <span id="sell_error" style="color:red"></span>
+                <!-- <div id="error">error</div> -->
                 <div class="form-group">
                     <label class="control-label  " for="id_sharesAmount">Shares amount</label>
                     <div class=" ">
@@ -446,6 +447,7 @@
     {% endif %}
 
 <script>
+
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
 }
@@ -508,9 +510,10 @@ event.preventDefault();
                $('#sellShares').modal('toggle');
 window.location.href = "{% url 'cab:index' %}";
              } else {
-             $("#error").show();
-             $("#error").html(data['error']);
-            alert(data['error'])
+             $("#sell_error").show();
+             $("#sell_error").html(data['error']);
+
+            // alert(data['error'])
               }
            }
 
