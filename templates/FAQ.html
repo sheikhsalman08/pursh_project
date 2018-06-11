@@ -71,7 +71,7 @@
     <a href="javascript:void(0)" style="padding: 0px" class="navbar-brand">
         <img src="{% static "img/logo-n.png" %}">
     </a>
-    <p class="hidden-xs">Trade Stock Like A Pro</p>
+    <!-- <p class="hidden-xs">Trade Stock Like A Pro</p> -->
   </div>
 
   <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -80,7 +80,7 @@
         <li><a href="{% url 'cab:history' %}">History</a></li>
         <li class="action"><a href="{% url 'cab:FAQ' %}">FAQ</a></li>
         <li><a href="{% url 'Users:logout' %}">Logout</a></li>
-        <li><a style="color: #08ce08;" href="{% url 'cab:resetPassword' %}">Balance: {{ request.user.balance }} $</a></li>
+        <li><a style="color: #08ce08;" href="{% url 'cab:resetPassword' %}">My Balance: {{ request.user.balance }} $</a></li>
         <li><a style="color: #F9DA1A;" href="javascript:void(0)">London: <span id="timeClock">{% now 'H:i:s' %}</span> AM</a></li>
     </ul>
   </div>

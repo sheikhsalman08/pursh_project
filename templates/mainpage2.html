@@ -112,7 +112,7 @@
                 <input type="hidden" name="sellUrl" id="id_sellUrl" value="{% url 'cab:sellShares' %}" />
 
                 <!-- <legend id="CNSBSB">How many shares of the company  you want to buy?</legend> -->
-                <legend id="CNSBSB">How many shares of the "{{ user_company_name }}"  you want to buy?</legend>
+                <legend id="CNSBSB">How many shares of the company "{{ user_company_name|title }}" do  you want to buy?</legend>
                 <span id="error" style="color:red"></span>
                 <div class="form-group">
                     <label class="control-label  " for="id_sharesAmount">Shares amount</label>
@@ -127,18 +127,19 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label  " for="id_profit">Take Profit</label>
+                    <label class="control-label  " for="id_profit">Take Profit *</label>
                     <div class=" ">
                         <input class="form-control" id="takeProfit"  name="takeProfit"  step="1" type="number" value="">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label  " for="id_stop">Stop Loss</label>
+                    <label class="control-label  " for="id_stop">Stop Loss *</label>
                     <div class=" ">
                         <input class="form-control" id="stopLoss"  name="stopLoss"  step="1" type="number" value="">
                     </div>
                 </div>
                 <input type="hidden" name="company" id="id_companyPk_buy" value="{{ user_company_id }}" />
+                <label class="control-label  " for="id_stop">Optional *</label>
                 <!-- <input type="hidden" name="company" id="id_companyPk_buy" value="{{ request.user.company.id }}" /> -->
                 <div class="form-group">
                     <div class="pull-right">
@@ -163,7 +164,7 @@
 function sellShare(pk, companyname)
 {
     $('#id_companyPk_sell').val(pk);
-    $('#CNSBSBSell').html('How many shares of the company "'+companyname+'" you want to sell?');
+    $('#CNSBSBSell').html('How many shares of the company "'+companyname+'"do you want to sell?');
     // $('#sellShares form').attr('action', $('#id_sellUrl').val());
     $('#sellShares').modal('show');
 }
@@ -176,7 +177,7 @@ $('button').click(function(){
     var company = $(this).data('company');
     console.log(id);
     $('#id_companyPk_sell').val(id);
-    $('#CNSBSBSell').html('How many shares of the company "'+company+'" you want to sell?');
+    $('#CNSBSBSell').html('How many shares of the company "'+company+'"do you want to sell?');
     // $('#sellShares form').attr('action', $('#id_sellUrl').val());
     $('#sellShares').modal('show');
   });

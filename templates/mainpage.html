@@ -11,8 +11,8 @@
     <script type="text/javascript" src="{% static "js/bootstrap-table.min.js" %}"></script>
     <script type="text/javascript" src="{% static "js/bootstrap-table-contextmenu.min.js" %}"></script>
     <script src="{% static "js/stock/highstock.js" %}"></script>
-	<script src="{% static "js/stock/highcharts-more.js" %}"></script>
-	<script src="{% static "js/stock/modules/exporting.js" %}"></script>
+    <script src="{% static "js/stock/highcharts-more.js" %}"></script>
+    <script src="{% static "js/stock/modules/exporting.js" %}"></script>
     <script type="text/javascript" src="{% static "js/rmenu.js" %}"></script>
     <script type="text/javascript" src="{% static "js/chart.js" %}"></script>
     <script type="text/javascript" src="{% static "js/scripts.js" %}"></script>
@@ -111,7 +111,9 @@
                                 <th data-field="companyname" class="col-xs-5">Company</th>
                                 <th data-field="bid" class="col-xs-3">Bid</th>
                                 <th data-field="ask" class="col-xs-2">Ask</th>
-                                <th data-field="" class="col-xs-2"><i class="fa fa-arrow-up color-green"></i><i class="fa fa-arrow-down color-red"></i></th>
+                                <th data-field="" class="col-xs-2">
+                                    <i style="padding-bottom: 5px" class="fa fa-arrow-up color-green"></i><i class="fa fa-arrow-down color-red"></i>
+                                </th>
                                 <th data-field="pk" class="hidden"></th>
                             </tr>
                         </thead>
@@ -337,7 +339,8 @@
                 <input type="hidden" name="buyUrl" id="id_buyUrl" value="{% url 'cab:buyShares' %}" />
                 <input type="hidden" name="sellUrl" id="id_sellUrl" value="{% url 'cab:sellShares' %}" />
 
-                <legend id="CNSBSB">How many shares of the company  you want to buy?</legend>
+                <!-- <legend id="CNSBSB">How many shares of the company "{{ user_company_name|title }}" do you want to buy?</legend> -->
+                <legend id="CNSBB">How many shares of the company "{{ user_company_name|title }}" do you want to buy?</legend>
                 <span id="error" style="color:red"></span>
                 <div class="form-group">
                     <label class="control-label  " for="id_sharesAmount">Shares amount</label>
@@ -352,17 +355,18 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label  " for="id_profit">Take Profit</label>
+                    <label class="control-label  " for="id_profit">Take Profit *</label>
                     <div class=" ">
                         <input class="form-control" id="takeProfit" name="takeProfit"  step="1" type="number" value="0">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="control-label  " for="id_stop">Stop Loss</label>
+                    <label class="control-label  " for="id_stop">Stop Loss *</label>
                     <div class=" ">
                         <input class="form-control" id="stopLoss" name="stopLoss" step="1" type="number" value="0">
                     </div>
                 </div>
+                <label class="control-label  " for="id_stop">Optional *</label>
                 <input type="hidden" name="company" id="id_companyPk_buy" value="" />
                 <div class="form-group">
                     <div class="pull-right">
@@ -388,7 +392,7 @@
             <form class="form-horizontal" id="sell_form" action="{% url 'cab:sellShares' %}" method="POST" role="form">{% csrf_token %}
                 <input type="hidden" name="buyUrl" id="id_buyUrl" value="{% url 'cab:buyShares' %}" />
                 <input type="hidden" name="sellUrl" id="id_sellUrl" value="{% url 'cab:sellShares' %}" />
-                <legend id="CNSBSBSell">How many shares of the company  you want to sell?</legend>
+                <legend id="CNSBSBSell">How many shares of the company do you want to sell?</legend>
                 <span id="error" style="color:red"></span>
                 <div class="form-group">
                     <label class="control-label  " for="id_sharesAmount">Shares amount</label>
@@ -442,10 +446,13 @@
     {% endif %}
 
 <script>
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1);
+}
 function sellShare(pk, companyname)
 {
     $('#id_companyPk_sell').val(pk);
-    $('#CNSBSBSell').html('How many shares of the company "'+companyname+'" you want to sell?');
+    $('#CNSBSBSell').html('How many shares of the company "'+companyname.capitalize()+'"do you want to sell?');
     // $('#sellShares form').attr('action', $('#id_sellUrl').val());
     $('#sellShares').modal('show');
 }
@@ -458,7 +465,7 @@ $('button').click(function(){
     var company = $(this).data('company');
     console.log(id);
     $('#id_companyPk_sell').val(id);
-    $('#CNSBSBSell').html('How many shares of the company "'+company+'" you want to sell?');
+    $('#CNSBSBSell').html('How many shares of the company "'+company.capitalize()+'"do you want to sell?');
     // $('#sellShares form').attr('action', $('#id_sellUrl').val());
     $('#sellShares').modal('show');
   });
@@ -480,7 +487,7 @@ window.location.href = "{% url 'cab:index' %}";
              } else {
              $("#error").show();
              $("#error").html(data['error']);
-	
+    
            }
 
            }
@@ -488,7 +495,7 @@ window.location.href = "{% url 'cab:index' %}";
          });
          
 event.preventDefault();
-	         return false;
+             return false;
      });
      sell_order.submit(function (event) {
 
@@ -504,13 +511,13 @@ window.location.href = "{% url 'cab:index' %}";
              } else {
              $("#error").show();
              $("#error").html(data['error']);
-		
+        
               }
            }
 
          });
          event.preventDefault();
-         	return false;
+            return false;
 
      });
  });

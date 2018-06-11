@@ -149,6 +149,7 @@ def cab_common(request, user, local):
             else:
                 pending.append(transaction.sell_order)
                 transactions.append(transaction.id)
+        user_company_id = Company.objects.filter(user=user).first()
         return render(request, 'mainpage.html' if local else 'externpage.html', {'news': n,
                                                  'orders': result_orders,
                                                  'company': company,
@@ -160,6 +161,7 @@ def cab_common(request, user, local):
                                                  'OpenCompanyForm': form,
                                                  'defaultCompany': company[0],
                                                  'pk': c.id,
+                                                 'user_company_name':user_company_id.name,
                                                  })
     return HttpResponseRedirect(reverse('controlpanel:managenews'))
 
