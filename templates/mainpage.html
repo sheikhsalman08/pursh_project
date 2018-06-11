@@ -452,7 +452,7 @@ String.prototype.capitalize = function() {
 function sellShare(pk, companyname)
 {
     $('#id_companyPk_sell').val(pk);
-    $('#CNSBSBSell').html('How many shares of the company "'+companyname.capitalize()+'"do you want to sell?');
+    $('#CNSBSBSell').html('How many shares of the company "'+companyname.capitalize()+'" do you want to sell?');
     // $('#sellShares form').attr('action', $('#id_sellUrl').val());
     $('#sellShares').modal('show');
 }
@@ -465,7 +465,7 @@ $('button').click(function(){
     var company = $(this).data('company');
     console.log(id);
     $('#id_companyPk_sell').val(id);
-    $('#CNSBSBSell').html('How many shares of the company "'+company.capitalize()+'"do you want to sell?');
+    $('#CNSBSBSell').html('How many shares of the company "'+company.capitalize()+'" do you want to sell?');
     // $('#sellShares form').attr('action', $('#id_sellUrl').val());
     $('#sellShares').modal('show');
   });
@@ -507,11 +507,10 @@ event.preventDefault();
              if (data['error'] == undefined) {
                $('#sellShares').modal('toggle');
 window.location.href = "{% url 'cab:index' %}";
-
              } else {
              $("#error").show();
              $("#error").html(data['error']);
-        
+            alert(data['error'])
               }
            }
 
