@@ -256,7 +256,7 @@ event.preventDefault();
               $('#shares_sold_msg').html('<div style="text-align: center;"><h4 style="color:#4caf50;  margin:7px;padding:center">Shares sold successfully</h4></div>')
                   $('#sellShares').modal('toggle');
                $("#error").hide();
-              window.location.href = "{% url 'cab:active_trades' %}";
+              window.location.href = "{% url 'cab:active_trades' request.user.username %}";
 
              } else {
              $("#error").show();
